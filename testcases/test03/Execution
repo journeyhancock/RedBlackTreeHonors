@@ -1,0 +1,2 @@
+#!/bin/bash
+./RBTRee I-file O-file
