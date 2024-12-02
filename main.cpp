@@ -120,7 +120,7 @@ int main(int argCount, char**argVal) {
             if (strcmp(word, "Delete") == 0) {
                 fprintf(stdout, "Instruction: Delete %d \n", key);
 
-                treeDelete(root, key, NIL);
+                root = treeDelete(root, key, NIL);
             }
 
             if (strcmp(word, "Search") == 0) {

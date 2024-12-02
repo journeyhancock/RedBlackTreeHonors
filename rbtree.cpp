@@ -200,20 +200,26 @@ node* bstDelete(node *root, int key, node *NIL) {
     return bstDelete(root, successor->key, NIL); //Delete successor
 }
 
-void treeDelete(node *root, int key, node *NIL) {
+node* treeDelete(node *root, int key, node *NIL) {
     node *y = new node;
     y = bstDelete(root, key, NIL); //Successor node
 
-    node *x = new node;
-    y->left != NIL ? x = y->left : x = y->right; //x is what moves into the position of the successor node
-
-    node *z = new node;
-    z = search(root, key, NIL);
-    z->key = y->key; //Update deleted node with new value
+    node *x = new node; //x is what moves into the spot of y
+    if (y->left != NIL) {
+        x = y->left;
+    } else if (y->right != NIL) {
+        x = y->right;
+    } else {
+        x->parent = y->parent;
+        x->key = INT_MAX;
+        x->color = 0;
+        x->right = NIL;
+        x->left = NIL;
+    }
 
     node *w = new node;
     if (x->color == 0) {
-        y->parent->left == x ? w = y->parent->right : w = y->parent->left; //Set w as sibling of x
+        y->parent->left->key == x->key ? w = y->parent->right : w = y->parent->left; //Set w as sibling of x
     }
 
     if (x->color == 1) {
@@ -222,12 +228,13 @@ void treeDelete(node *root, int key, node *NIL) {
     } else {
         //Need to perform fixup
         while (x != root and x->color == 0) {
-            //Case 1
+            //Case 1: x->color == 0, w->color == 1
             if (w->color == 1) {
-                rotate(root, w, w->parent->parent);
+                root = rotate(root, w, w->parent->parent);
+                if (x != root) x->parent->left->key == x->key ? w = x->parent->right : w = x->parent->left; //Update w based on new x
             }
 
-            //Case 2
+            //Case 2: x->color == 0, w->color == 0, w->left->color == 0, w->right->color == 0
             if (w->color == 0 and w->left->color == 0 and w->right->color == 0) {
                 x = w->parent;
                 if (x != root) {
@@ -236,38 +243,44 @@ void treeDelete(node *root, int key, node *NIL) {
                         x->color = 0;
                     }
                 }
+                if (x != root) x->parent->left->key == x->key ? w = x->parent->right : w = x->parent->left; //Update w based on new x
             }
 
-            //Case 3
+            //Case 3: w->color == 0, w->nearChild->color == 1, w->otherChild->color == 1
             if (w->color == 0) {
                 if (w->parent->right == w) {
                     if (w->left->color == 1 and w->right->color == 0) {
-                        rotate(root, w->left, w->left->parent->parent);
+                        root = rotate(root, w->left, w->left->parent->parent);
+                        if (x != root) x->parent->left->key == x->key ? w = x->parent->right : w = x->parent->left; //Update w based on new x
                     }
-                } else {
+                } else if (w->parent->left == w) {
                     if (w->right->color == 1 and w->left->color == 0) {
-                        rotate(root, w->right, w->right->parent->parent);
+                        root = rotate(root, w->right, w->right->parent->parent);
+                        if (x != root) x->parent->left->key == x->key ? w = x->parent->right : w = x->parent->left; //Update w based on new x
                     }
                 }
             }
 
-            //Case 4
+            //Case 4: w->color == 0, w->farChild->color == 1
             if (w->color == 0) {
                 if (w->parent->right == w) {
                     if (w->right->color == 1) {
-                        rotate(root, w, w->parent->parent);
+                        root = rotate(root, w, w->parent->parent);
                         w->right->color = 0;
+                        break; //End loop since RBTree is valid after Case 4 solved
                     }
-                } else {
+                } else if (x->parent->left == w) {
                     if (w->left->color == 1) {
-                        rotate(root, w, w->parent->parent);
+                        root = rotate(root, w, w->parent->parent);
                         w->left->color = 0;
+                        break; //End loop since RBTree is valid after Case 4 solved
                     }
                 }
+
             }
-            if (x != root) x->parent->left == x ? w = x->parent->right : w = x->parent->left; //Update w based on new x
         }
     }
+    return root;
 }
 
 node* search(node *root, int key, node *NIL) {
