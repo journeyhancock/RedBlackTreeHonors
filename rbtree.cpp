@@ -217,6 +217,12 @@ node* treeDelete(node *root, int key, node *NIL) {
         x->left = NIL;
     }
 
+    if (y->key != key) {
+        node *z = new node;
+        z = search(root, key, NIL);
+        z->key = y->key;
+    }
+
     node *w = new node;
     if (x->color == 0) {
         y->parent->left->key == x->key ? w = y->parent->right : w = y->parent->left; //Set w as sibling of x

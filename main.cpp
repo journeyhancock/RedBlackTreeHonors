@@ -114,13 +114,21 @@ int main(int argCount, char**argVal) {
             if (strcmp(word, "Insert") == 0) {
                 fprintf(stdout, "Instruction: Insert %d \n", key);
 
-                root = insert(root, key, NIL);
+                if (search(root, key, NIL) != NIL) {
+                    fprintf(stdout, "Key: %d already in tree \n", key);
+                } else {
+                    root = insert(root, key, NIL);
+                }
             }
 
             if (strcmp(word, "Delete") == 0) {
                 fprintf(stdout, "Instruction: Delete %d \n", key);
 
-                root = treeDelete(root, key, NIL);
+                if (search(root, key, NIL) == NIL) {
+                    fprintf(stdout, "Key: %d not in tree \n", key);
+                } else {
+                    root = treeDelete(root, key, NIL);
+                }
             }
 
             if (strcmp(word, "Search") == 0) {
