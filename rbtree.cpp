@@ -133,9 +133,12 @@ node* insert(node *root, int key, node *NIL) {
         grandparent->left == x->parent ? uncle = grandparent->right : uncle = grandparent->left;
 
         if (x->color == 1 and x->parent->color == 1 and uncle->color == 1) {
-            x->parent->parent->color = 1;
             x->parent->color = 0;
             uncle->color = 0;
+            if (x->parent->parent == root) {
+                break;
+            }
+            x->parent->parent->color = 1;
             x = x->parent->parent;
         }
 
@@ -256,7 +259,7 @@ node* treeDelete(node *root, int key, node *NIL) {
                 if (x != root) x->parent->left->key == x->key ? w = x->parent->right : w = x->parent->left; //Update w based on new x
             }
 
-            //Case 3: w->color == 0, w->nearChild->color == 1, w->otherChild->color == 1
+            //Case 3: w->color == 0, w->nearChild->color == 1, w->otherChild->color == 0
             if (w->color == 0) {
                 if (w->parent->right == w) {
                     if (w->left->color == 1 and w->right->color == 0) {
