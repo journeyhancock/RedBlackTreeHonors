@@ -32,6 +32,7 @@ int instruction(char *word, int *key) {
             return 1;
         }
     }
+
     if (strcmp(word, "Search") == 0) {
         value = fscanf(stdin, "%d", key);
         if (value == 1) {

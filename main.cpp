@@ -37,6 +37,7 @@ int main(int argCount, char**argVal) {
     NIL->color = 0;
     //Init root node
     root->color = 0;
+    root->key = INT_MAX;
     root->left = NIL;
     root->right = NIL;
     root->parent = nullptr;
@@ -134,7 +135,18 @@ int main(int argCount, char**argVal) {
             if (strcmp(word, "Search") == 0) {
                 fprintf(stdout, "Instruction: Search %d \n", key);
 
-                search(root, key, NIL);
+                node *temp = new node;
+                temp = search(root, key, NIL);
+
+                if (temp == NIL) {
+                    fprintf(stdout, "Key: %d not in tree \n", key);
+                } else {
+                    if (temp->color == 0) {
+                        fprintf(stdout, "Node key: %d with color: Black \n", temp->key);
+                    } else {
+                        fprintf(stdout, "Node key: %d with color: Red \n", temp->key);
+                    }
+                }
             }
         }
 

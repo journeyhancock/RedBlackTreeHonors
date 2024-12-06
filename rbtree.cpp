@@ -71,6 +71,10 @@ node* rotate(node *root, node *x, node *grandparent) {
 void printTree(node *root, node *NIL, FILE *stream) {
     node *curr = root;
 
+    if (root->key == INT_MAX) {
+        fprintf(stdout, "Error: Tree is NULL \n");
+    }
+
     if (curr != NIL) {
         const char* color1 = curr->color == 0 ? "\033[90m" : "\033[91m";
         const char* colorChar1 = curr->color == 0 ? "B" : "R";
@@ -282,7 +286,6 @@ node* treeDelete(node *root, int key, node *NIL) {
                         break; //End loop since RBTree is valid after Case 4 solved
                     }
                 }
-
             }
         }
     }
